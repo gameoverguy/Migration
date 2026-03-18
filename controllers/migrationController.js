@@ -17,11 +17,19 @@ const schemaBackup = path.join(__dirname, "../prisma/schema.backup.prisma");
 const configBackup = path.join(__dirname, "../prisma.config.backup.ts");
 
 function buildMysqlUrl(src) {
-  return `mysql://${src.user}:${src.password}@${src.host}:${src.port}/${src.database}`;
+  if (src.port) {
+    return `mysql://${src.user}:${src.password}@${src.host}:${src.port}/${src.database}`;
+  } else {
+    return `mysql://${src.user}:${src.password}@${src.host}/${src.database}`;
+  }
 }
 
 function buildPgUrl(dest) {
-  return `postgresql://${dest.user}:${dest.password}@${dest.host}:${dest.port}/${dest.database}`;
+  if (dest.port) {
+    return `postgresql://${dest.user}:${dest.password}@${dest.host}:${dest.port}/${dest.database}`;
+  } else {
+    return `postgresql://${dest.user}:${dest.password}@${dest.host}/${dest.database}`;
+  }
 }
 
 function updatePrismaConfig(url) {

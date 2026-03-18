@@ -6,12 +6,18 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // --- MySQL connection ---
-const mysqlConfig = {
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DB,
-};
+// const mysqlConfig = {
+//   host: process.env.MYSQL_HOST,
+//   user: process.env.MYSQL_USER,
+//   password: process.env.MYSQL_PASSWORD,
+//   database: process.env.MYSQL_DB,
+// };
+
+const mysqlConfig = process.env.MYSQL_URL;
+
+const mysqlUrl = new URL(process.env.MYSQL_URL);
+
+const dbName = mysqlUrl.pathname.replace("/", "");
 
 // --- PostgreSQL connection ---
 const pgPool = new Pool({ connectionString: process.env.POSTGRES_URL });
@@ -30,7 +36,8 @@ async function getDependencies(mysqlConn) {
     FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
     WHERE CONSTRAINT_SCHEMA = ? AND REFERENCED_TABLE_NAME IS NOT NULL
   `;
-  const [rows] = await mysqlConn.execute(query, [mysqlConfig.database]);
+  // const [rows] = await mysqlConn.execute(query, [mysqlConfig.database]);
+  const [rows] = await mysqlConn.execute(query, [dbName]);
 
   // Build dependency map: table -> set of tables it depends on
   const deps = {};

@@ -1,20 +1,20 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: "../.env" });
 
 async function createTestDB() {
   const connection = await mysql.createConnection({
     host: process.env.MYSQL_HOST,
-    port: process.env.MYSQL_PORT,
+    port: Number(process.env.MYSQL_PORT),
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
   });
 
   console.log("Connected to MySQL");
 
-  await connection.query(`CREATE DATABASE IF NOT EXISTS migration_test`);
-  await connection.query(`USE migration_test`);
+  // await connection.query(`CREATE DATABASE IF NOT EXISTS migration_test`);
+  await connection.query(`USE ${process.env.MYSQL_DB}`);
 
   // USERS
   await connection.query(`
