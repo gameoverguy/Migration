@@ -1,0 +1,9 @@
+npx prisma db pull
+
+node mysql_to_pg_converter.js
+
+// npx prisma db push --schema=./prisma/schema.postgres.prisma
+
+
+
+
